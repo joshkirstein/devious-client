@@ -192,7 +192,7 @@ public class CrypticClue extends ClueScroll implements NpcClueScroll, ObjectClue
 			.npcRegion(10547)
 			.npcRegion(10548)
 			.objectId(ObjectID.DRAWERS)
-			.solution("Kill any Guard located around East Ardougne for a easy_large_npc key. Then search the drawers in the upstairs hallway of Jerico's house, which is the house with pigeon cages located south of the northern East Ardougne bank.")
+			.solution("Kill any Guard located around East Ardougne for a medium key. Then search the drawers in the upstairs hallway of Jerico's house, which is the house with pigeon cages located south of the northern East Ardougne bank.")
 			.build(),
 		CrypticClue.builder()
 			.text("His bark is worse than his bite.")
@@ -1662,7 +1662,7 @@ public class CrypticClue extends ClueScroll implements NpcClueScroll, ObjectClue
 			.location(new WorldPoint(1506, 3590, 2))
 			.npc("Hill Giant")
 			.objectId(ObjectID.CRATE_42067)
-			.solution("Kill any Hill Giant for a easy_large_npc key. Then search the crate on the top floor of Osten's clothing shop in Shayzien.")
+			.solution("Kill any Hill Giant for a medium key. Then search the crate on the top floor of Osten's clothing shop in Shayzien.")
 			.build(),
 		CrypticClue.builder()
 			.text("Search the basket of apples in an orchard, south of the unknown grave surrounded by white roses.")

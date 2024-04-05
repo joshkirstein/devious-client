@@ -1052,7 +1052,7 @@ public class LootTrackerPlugin extends Plugin
 				case "easy":
 					eventType = "Clue Scroll (Easy)";
 					break;
-				case "easy_large_npc":
+				case "medium":
 					eventType = "Clue Scroll (Medium)";
 					break;
 				case "hard":

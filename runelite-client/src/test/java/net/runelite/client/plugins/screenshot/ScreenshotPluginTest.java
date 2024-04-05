@@ -66,7 +66,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ScreenshotPluginTest
 {
-	private static final String CLUE_SCROLL = "<col=3300ff>You have completed 28 easy_large_npc Treasure Trails</col>";
+	private static final String CLUE_SCROLL = "<col=3300ff>You have completed 28 medium Treasure Trails</col>";
 	private static final String BARROWS_CHEST = "Your Barrows chest count is <col=ff0000>310</col>";
 	private static final String CHAMBERS_OF_XERIC_CHEST = "Your completed Chambers of Xeric count is: <col=ff0000>489</col>.";
 	private static final String THEATRE_OF_BLOOD_CHEST = "Your completed Theatre of Blood count is: <col=ff0000>73</col>.";
@@ -143,7 +143,7 @@ public class ScreenshotPluginTest
 		ChatMessage chatMessageEvent = new ChatMessage(null, GAMEMESSAGE, "Seth", CLUE_SCROLL, null, 0);
 		screenshotPlugin.onChatMessage(chatMessageEvent);
 
-		assertEquals("easy_large_npc", screenshotPlugin.getClueType());
+		assertEquals("medium", screenshotPlugin.getClueType());
 		assertEquals(28, screenshotPlugin.getClueNumber());
 	}
 
@@ -388,7 +388,7 @@ public class ScreenshotPluginTest
 	public void testCombatAchievementsParsing()
 	{
 		assertEquals("Combat task (Into the Den of Giants)", ScreenshotPlugin.parseCombatAchievementWidget("Congratulations, you've completed an easy combat task: <col=06600c>Into the Den of Giants</col>."));
-		assertEquals("Combat task (I'd Rather Not Learn)", ScreenshotPlugin.parseCombatAchievementWidget("Congratulations, you've completed a easy_large_npc combat task: <col=06600c>I'd Rather Not Learn</col>."));
+		assertEquals("Combat task (I'd Rather Not Learn)", ScreenshotPlugin.parseCombatAchievementWidget("Congratulations, you've completed a medium combat task: <col=06600c>I'd Rather Not Learn</col>."));
 		assertEquals("Combat task (Why Cook)", ScreenshotPlugin.parseCombatAchievementWidget("Congratulations, you've completed a hard combat task: <col=0cc919>Why Cook?</col>."));
 		assertEquals("Combat task (From Dusk...)", ScreenshotPlugin.parseCombatAchievementWidget("Congratulations, you've completed an elite combat task: <col=06600c>From Dusk...</col>."));
 		assertEquals("Combat task (Perfect Olm (Trio))", ScreenshotPlugin.parseCombatAchievementWidget("Congratulations, you've completed a master combat task: <col=0cc919>Perfect Olm (Trio)</col>."));
