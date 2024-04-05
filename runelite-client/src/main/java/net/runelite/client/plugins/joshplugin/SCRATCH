@@ -1,0 +1,138 @@
+///////
+////
+//// CODE FOR DRAWING PREDICTED NPC PATH TO PLAYER
+////
+///////
+
+//    public void findAndDrawPathToPlayer(NPC npc, Player ply, Graphics2D graphics) {
+//        if (npc == null || ply == null) return;
+//
+//        boolean isInteractingLocal = npc.getInteracting() != null && npc.getInteracting().equals(client.getLocalPlayer());
+//
+//        // Draw NPC area
+//        if (DEBUG_DRAW && graphics != null) {
+//            Polygon poly = npc.getCanvasTilePoly();
+//            OverlayUtil.renderPolygon(graphics, poly, isInteractingLocal ? RED : GREEN);
+//
+//            // Draw specific NPC location
+//            poly = Perspective.getCanvasTilePoly(client, Objects.requireNonNull(LocalPoint.fromWorld(client, npc.getWorldLocation())));
+//            OverlayUtil.renderPolygon(graphics, poly, GREEN);
+//        }
+//
+//        if (!isInteractingLocal) return;
+//
+//        findAndDrawPathToPlayer(npc.getComposition(), ply, npc.getWorldX(), npc.getWorldY(), graphics);
+//    }
+//    public void findAndDrawPathToPlayer(NPCComposition npcComp, Player ply, int futureX, int futureY, Graphics2D graphics) {
+//        int npcSize = npcComp.getSize();
+//
+//        int dx = Integer.signum(ply.getWorldX() - futureX);
+//        int dy = Integer.signum(ply.getWorldY() - futureY);
+//        if (collides(futureX, futureY, npcSize, ply.getWorldX(), ply.getWorldY(), 1)) {
+//            // npc directly under, moves to random location
+//            dx = 0; dy = 0; // don't display anything for now since it's random where npc goes
+//        } else if (collides(futureX + dx, futureY + dy, npcSize, ply.getWorldX(), ply.getWorldY(), 1)) {
+//            // next position will put npc directly under player, therefore only move east/west (i.e., nextX)
+//            // as npc always tries to align on east/west (which allows safespotting)
+//            dy = 0;
+//        }
+//
+//        if (dx == 0 && dy == 0) {
+//            return;
+//        }
+//
+//        boolean canMoveDx = canMoveDx(graphics, npcComp, futureX, futureY, ply.getPlane(), dx, dy);
+//        boolean canMoveDy = canMoveDy(graphics, npcComp, futureX, futureY, ply.getPlane(), dx, dy);
+//        boolean both = canMoveDx && canMoveDy;
+//        if (!both) {
+//            canMoveDx = canMoveDx(graphics, npcComp, futureX, futureY, ply.getPlane(), dx, 0);
+//            canMoveDy = canMoveDy(graphics, npcComp, futureX, futureY, ply.getPlane(), 0, dy);
+//        }
+//
+//        int nextX = 0, nextY = 0;
+//        if (both) {
+//            // next tile
+//            nextX = futureX + dx;
+//            nextY = futureY + dy;
+//        } else if (canMoveDx) {
+//            nextX = futureX + dx;
+//            nextY = futureY;
+//        } else if (canMoveDy) {
+//            nextX = futureX;
+//            nextY = futureY + dy;
+//        }
+//
+//        if (DEBUG_DRAW && graphics != null) {
+//            LocalPoint next = LocalPoint.fromWorld(client, nextX, nextY);
+//            Polygon poly = Perspective.getCanvasTilePoly(client, Objects.requireNonNull(next));
+//            OverlayUtil.renderPolygon(graphics, poly, ORANGE);
+//        }
+//
+//        if (nextX != futureX || nextY != futureY) {
+//            findAndDrawPathToPlayer(npcComp, ply, nextX, nextY, graphics);
+//        }
+//    }
+//
+//    public boolean canMoveDx(Graphics2D graphics, NPCComposition npcComp, int futureX, int futureY, int plane, int dx, int dy) {
+//        WorldPoint npcPos = new WorldPoint(futureX, futureY, plane);
+//        java.util.List<WorldPoint> points = new ArrayList<>();
+//
+//        int sz = npcComp.getSize();
+//        int start = (dy == -1) ? -1 : 0; // if we are moving down next tick
+//        int end = (dy == 1) ? sz + 1 : sz;
+//        if (dx > 0) {
+//            // Move right
+//            for (int i = start; i < end; i++) {
+//                points.add(npcPos.dx(sz).dy(i));
+//            }
+//        } else if (dx < 0) {
+//            // Move left
+//            for (int i = start; i < end; i++) {
+//                points.add(npcPos.dx(dx).dy(i));
+//            }
+//        }
+//
+//        boolean canMove = true;
+//        for (WorldPoint p : points) {
+//            if (Reachable.isObstacle(p)) {
+//                if (DEBUG_DRAW && graphics != null) {
+//                    LocalPoint pt = LocalPoint.fromWorld(client, p);
+//                    OverlayUtil.renderPolygon(graphics, Perspective.getCanvasTilePoly(client, Objects.requireNonNull(pt)), RED);
+//                }
+//                canMove = false;
+//            }
+//        }
+//        return canMove;
+//    }
+//
+//    public boolean canMoveDy(Graphics2D graphics, NPCComposition npcComp, int futureX, int futureY, int plane, int dx, int dy) {
+//        WorldPoint npcPos = new WorldPoint(futureX, futureY, plane);
+//        List<WorldPoint> points = new ArrayList<>();
+//
+//        int sz = npcComp.getSize();
+//        int start = (dx == -1) ? -1 : 0; // if we are moving left next tick
+//        int end = (dx == 1) ? sz + 1 : sz;
+//        if (dy > 0) {
+//            // Move up
+//            for (int i = start; i < end; i++) {
+//                points.add(npcPos.dx(i).dy(sz));
+//            }
+//        } else if (dy < 0) {
+//            // Move down
+//            for (int i = start; i < end; i++) {
+//                points.add(npcPos.dx(i).dy(dy));
+//            }
+//        }
+//
+//        boolean canMove = true;
+//        for (WorldPoint p : points) {
+//            if (Reachable.isObstacle(p)) {
+//                if (DEBUG_DRAW && graphics != null) {
+//                    LocalPoint pt = LocalPoint.fromWorld(client, p);
+//                    OverlayUtil.renderPolygon(graphics, Perspective.getCanvasTilePoly(client, Objects.requireNonNull(pt)), RED);
+//                }
+//                canMove = false;
+//            }
+//        }
+//        return canMove;
+//    }

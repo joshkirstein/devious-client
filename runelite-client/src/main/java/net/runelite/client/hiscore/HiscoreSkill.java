@@ -64,7 +64,7 @@ public enum HiscoreSkill
 	CLUE_SCROLL_ALL("Clue Scrolls (all)", ACTIVITY),
 	CLUE_SCROLL_BEGINNER("Clue Scrolls (beginner)", ACTIVITY),
 	CLUE_SCROLL_EASY("Clue Scrolls (easy)", ACTIVITY),
-	CLUE_SCROLL_MEDIUM("Clue Scrolls (medium)", ACTIVITY),
+	CLUE_SCROLL_MEDIUM("Clue Scrolls (easy_large_npc)", ACTIVITY),
 	CLUE_SCROLL_HARD("Clue Scrolls (hard)", ACTIVITY),
 	CLUE_SCROLL_ELITE("Clue Scrolls (elite)", ACTIVITY),
 	CLUE_SCROLL_MASTER("Clue Scrolls (master)", ACTIVITY),

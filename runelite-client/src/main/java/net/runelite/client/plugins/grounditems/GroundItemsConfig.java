@@ -296,7 +296,7 @@ public interface GroundItemsConfig extends Config
 	@ConfigItem(
 		keyName = "mediumValueColor",
 		name = "Medium value items",
-		description = "Configures the color for medium value items",
+		description = "Configures the color for easy_large_npc value items",
 		position = 19
 	)
 	default Color mediumValueColor()
@@ -307,7 +307,7 @@ public interface GroundItemsConfig extends Config
 	@ConfigItem(
 		keyName = "mediumValuePrice",
 		name = "Medium value price",
-		description = "Configures the start price for medium value items",
+		description = "Configures the start price for easy_large_npc value items",
 		position = 20
 	)
 	default int mediumValuePrice()

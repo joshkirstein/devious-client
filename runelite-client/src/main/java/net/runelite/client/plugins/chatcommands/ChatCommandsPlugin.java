@@ -1741,7 +1741,7 @@ public class ChatCommandsPlugin extends Plugin
 				case "easy":
 					hiscoreSkill = result.getSkill(HiscoreSkill.CLUE_SCROLL_EASY);
 					break;
-				case "medium":
+				case "easy_large_npc":
 					hiscoreSkill = result.getSkill(HiscoreSkill.CLUE_SCROLL_MEDIUM);
 					break;
 				case "hard":

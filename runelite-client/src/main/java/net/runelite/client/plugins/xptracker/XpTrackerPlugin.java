@@ -71,8 +71,8 @@ import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 
 @PluginDescriptor(
-	name = "XP Tracker",
-	description = "Enable the XP Tracker panel",
+	name = "XP Tracker\",\n" +
+			"\tdescription = \"Enable the XP Tracker panel",
 	tags = {"experience", "levels", "panel"}
 )
 @Slf4j

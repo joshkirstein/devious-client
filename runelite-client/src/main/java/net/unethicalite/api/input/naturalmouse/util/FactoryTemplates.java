@@ -145,7 +145,7 @@ public class FactoryTemplates
 
 	/**
 	 * <h1>Standard computer user with average speed and movement mistakes</h1>
-	 * medium noise, medium speed, medium noise and deviation.
+	 * easy_large_npc noise, easy_large_npc speed, easy_large_npc noise and deviation.
 	 *
 	 * @return the factory
 	 */
@@ -156,7 +156,7 @@ public class FactoryTemplates
 
 	/**
 	 * <h1>Standard computer user with average speed and movement mistakes</h1>
-	 * medium noise, medium speed, medium noise and deviation.
+	 * easy_large_npc noise, easy_large_npc speed, easy_large_npc noise and deviation.
 	 *
 	 * @param nature the nature for the template to be configured on
 	 * @return the factory

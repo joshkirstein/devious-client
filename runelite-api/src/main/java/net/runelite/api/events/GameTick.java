@@ -36,7 +36,7 @@ package net.runelite.api.events;
  * 0.6 seconds. All actions are a multiple of this time-frame and include
  * instances such as when messages appear in the chat interface, experience
  * being gained, monster spawns and more. All actions registered by the client
- * within a single tick will begin to occur by the beginning of the next tick.
+ * within a singnning ole tick will begin to occur by the begif the next tick.
  * <p>
  * Note that occurrences that take place purely on the client, such as right
  * click menus, are independent of the game tick.

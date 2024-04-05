@@ -37,6 +37,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
@@ -46,22 +47,21 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.util.ColorUtil;
 
+@Slf4j
 public class OverlayUtil
 {
 	private static final int MINIMAP_DOT_RADIUS = 4;
 
-	public static void renderPolygon(Graphics2D graphics, Shape poly, Color color)
-	{
+	public static void renderPolygon(Graphics2D graphics, Shape poly, Color color) {
 		renderPolygon(graphics, poly, color, new BasicStroke(2));
 	}
 
-	public static void renderPolygon(Graphics2D graphics, Shape poly, Color color, Stroke borderStroke)
-	{
+	public static void renderPolygon(Graphics2D graphics, Shape poly, Color color, Stroke borderStroke) {
 		renderPolygon(graphics, poly, color, new Color(0, 0, 0, 50), borderStroke);
 	}
 
-	public static void renderPolygon(Graphics2D graphics, Shape poly, Color color, Color fillColor, Stroke borderStroke)
-	{
+	public static void renderPolygon(Graphics2D graphics, Shape poly, Color color, Color fillColor, Stroke borderStroke) {
+		if (poly == null) { log.debug("Not drawing due to poly null."); return; }
 		graphics.setColor(color);
 		final Stroke originalStroke = graphics.getStroke();
 		graphics.setStroke(borderStroke);
@@ -71,16 +71,14 @@ public class OverlayUtil
 		graphics.setStroke(originalStroke);
 	}
 
-	public static void renderMinimapLocation(Graphics2D graphics, Point mini, Color color)
-	{
+	public static void renderMinimapLocation(Graphics2D graphics, Point mini, Color color) {
 		graphics.setColor(Color.BLACK);
 		graphics.fillOval(mini.getX() - MINIMAP_DOT_RADIUS / 2, mini.getY() - MINIMAP_DOT_RADIUS / 2 + 1, MINIMAP_DOT_RADIUS, MINIMAP_DOT_RADIUS);
 		graphics.setColor(ColorUtil.colorWithAlpha(color, 0xFF));
 		graphics.fillOval(mini.getX() - MINIMAP_DOT_RADIUS / 2, mini.getY() - MINIMAP_DOT_RADIUS / 2, MINIMAP_DOT_RADIUS, MINIMAP_DOT_RADIUS);
 	}
 
-	public static void renderMinimapRect(Client client, Graphics2D graphics, Point center, int width, int height, Color color)
-	{
+	public static void renderMinimapRect(Client client, Graphics2D graphics, Point center, int width, int height, Color color) {
 		double angle = client.getCameraYawTarget() * Perspective.UNIT;
 
 		graphics.setColor(color);
@@ -89,10 +87,8 @@ public class OverlayUtil
 		graphics.rotate(-angle, center.getX(), center.getY());
 	}
 
-	public static void renderTextLocation(Graphics2D graphics, Point txtLoc, String text, Color color)
-	{
-		if (Strings.isNullOrEmpty(text))
-		{
+	public static void renderTextLocation(Graphics2D graphics, Point txtLoc, String text, Color color) {
+		if (Strings.isNullOrEmpty(text)) {
 			return;
 		}
 
@@ -106,95 +102,75 @@ public class OverlayUtil
 		graphics.drawString(text, x, y);
 	}
 
-	public static void renderImageLocation(Client client, Graphics2D graphics, LocalPoint localPoint, BufferedImage image, int zOffset)
-	{
+	public static void renderImageLocation(Client client, Graphics2D graphics, LocalPoint localPoint, BufferedImage image, int zOffset) {
 		Point imageLocation = Perspective.getCanvasImageLocation(client, localPoint, image, zOffset);
-		if (imageLocation != null)
-		{
+		if (imageLocation != null) {
 			renderImageLocation(graphics, imageLocation, image);
 		}
 	}
 
-	public static void renderImageLocation(Graphics2D graphics, Point imgLoc, BufferedImage image)
-	{
+	public static void renderImageLocation(Graphics2D graphics, Point imgLoc, BufferedImage image) {
 		int x = imgLoc.getX();
 		int y = imgLoc.getY();
 
 		graphics.drawImage(image, x, y, null);
 	}
 
-	public static void renderActorOverlay(Graphics2D graphics, Actor actor, String text, Color color)
-	{
+	public static void renderActorOverlay(Graphics2D graphics, Actor actor, String text, Color color) {
 		Polygon poly = actor.getCanvasTilePoly();
-		if (poly != null)
-		{
+		if (poly != null) {
 			renderPolygon(graphics, poly, color);
 		}
 
 		Point textLocation = actor.getCanvasTextLocation(graphics, text, actor.getLogicalHeight() + 40);
-		if (textLocation != null)
-		{
+		if (textLocation != null) {
 			renderTextLocation(graphics, textLocation, text, color);
 		}
 	}
 
-	public static void renderActorOverlayImage(Graphics2D graphics, Actor actor, BufferedImage image, Color color, int zOffset)
-	{
+	public static void renderActorOverlayImage(Graphics2D graphics, Actor actor, BufferedImage image, Color color, int zOffset) {
 		Polygon poly = actor.getCanvasTilePoly();
-		if (poly != null)
-		{
+		if (poly != null) {
 			renderPolygon(graphics, poly, color);
 		}
 
 		Point imageLocation = actor.getCanvasImageLocation(image, zOffset);
-		if (imageLocation != null)
-		{
+		if (imageLocation != null) {
 			renderImageLocation(graphics, imageLocation, image);
 		}
 	}
 
-	public static void renderTileOverlay(Graphics2D graphics, TileObject tileObject, String text, Color color)
-	{
+	public static void renderTileOverlay(Graphics2D graphics, TileObject tileObject, String text, Color color) {
 		Polygon poly = tileObject.getCanvasTilePoly();
-		if (poly != null)
-		{
+		if (poly != null) {
 			renderPolygon(graphics, poly, color);
 		}
 
 		Point minimapLocation = tileObject.getMinimapLocation();
-		if (minimapLocation != null)
-		{
+		if (minimapLocation != null) {
 			renderMinimapLocation(graphics, minimapLocation, color);
 		}
 
 		Point textLocation = tileObject.getCanvasTextLocation(graphics, text, 0);
-		if (textLocation != null)
-		{
+		if (textLocation != null) {
 			renderTextLocation(graphics, textLocation, text, color);
 		}
 	}
 
-	public static void renderTileOverlay(Client client, Graphics2D graphics, LocalPoint localLocation, BufferedImage image, Color color)
-	{
+	public static void renderTileOverlay(Client client, Graphics2D graphics, LocalPoint localLocation, BufferedImage image, Color color) {
 		Polygon poly = Perspective.getCanvasTilePoly(client, localLocation);
-		if (poly != null)
-		{
+		if (poly != null) {
 			renderPolygon(graphics, poly, color);
 		}
 
 		renderImageLocation(client, graphics, localLocation, image, 0);
 	}
 
-	public static void renderHoverableArea(Graphics2D graphics, Shape area, Point mousePosition, Color fillColor, Color borderColor, Color borderHoverColor)
-	{
-		if (area != null)
-		{
-			if (area.contains(mousePosition.getX(), mousePosition.getY()))
-			{
+	public static void renderHoverableArea(Graphics2D graphics, Shape area, Point mousePosition, Color fillColor, Color borderColor, Color borderHoverColor) {
+		if (area != null) {
+			if (area.contains(mousePosition.getX(), mousePosition.getY())) {
 				graphics.setColor(borderHoverColor);
-			}
-			else
-			{
+			} else {
 				graphics.setColor(borderColor);
 			}
 
@@ -204,17 +180,14 @@ public class OverlayUtil
 		}
 	}
 
-	public static void setGraphicProperties(Graphics2D graphics)
-	{
+	public static void setGraphicProperties(Graphics2D graphics) {
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
-	public static void shiftSnapCorner(OverlayPosition overlayPosition, Rectangle snapCorner, Rectangle bounds, int padding)
-	{
+	public static void shiftSnapCorner(OverlayPosition overlayPosition, Rectangle snapCorner, Rectangle bounds, int padding) {
 		// translate corner for padding and also based on where the overlay bounds are now
 		int sX = snapCorner.x, sY = snapCorner.y;
-		switch (overlayPosition)
-		{
+		switch (overlayPosition) {
 			case BOTTOM_LEFT:
 				sX = Math.max(sX, bounds.x + bounds.width + padding);
 				break;
@@ -237,12 +210,10 @@ public class OverlayUtil
 		snapCorner.y = sY;
 	}
 
-	public static java.awt.Point transformPosition(OverlayPosition position, Dimension dimension)
-	{
+	public static java.awt.Point transformPosition(OverlayPosition position, Dimension dimension) {
 		final java.awt.Point result = new java.awt.Point();
 
-		switch (position)
-		{
+		switch (position) {
 			case TOP_LEFT:
 				break;
 			case TOP_CENTER:
@@ -266,18 +237,15 @@ public class OverlayUtil
 		return result;
 	}
 
-	public static void renderParagraphLocation(Graphics2D graphics, Point txtLoc, String text, Color color)
-	{
-		if (Strings.isNullOrEmpty(text))
-		{
+	public static void renderParagraphLocation(Graphics2D graphics, Point txtLoc, String text, Color color) {
+		if (Strings.isNullOrEmpty(text)) {
 			return;
 		}
 
 		int x = txtLoc.getX();
 		int y = txtLoc.getY();
 
-		for (String line : text.split("\n"))
-		{
+		for (String line : text.split("\n")) {
 			graphics.setColor(Color.BLACK);
 			graphics.drawString(line, x + 1, y + 1);
 
@@ -288,11 +256,9 @@ public class OverlayUtil
 		}
 	}
 
-	public static void renderActorParagraph(Graphics2D graphics, Actor actor, String text, Color color)
-	{
+	public static void renderActorParagraph(Graphics2D graphics, Actor actor, String text, Color color) {
 		Polygon poly = actor.getCanvasTilePoly();
-		if (poly != null)
-		{
+		if (poly != null) {
 			renderPolygon(graphics, poly, color);
 		}
 
@@ -300,33 +266,27 @@ public class OverlayUtil
 		int lineLength = Integer.MIN_VALUE;
 		String largestLine = "";
 
-		for (String line : lines)
-		{
-			if (line.length() > lineLength)
-			{
+		for (String line : lines) {
+			if (line.length() > lineLength) {
 				lineLength = line.length();
 				largestLine = line;
 			}
 		}
 
 		Point textLocation = actor.getCanvasTextLocation(graphics, largestLine, actor.getLogicalHeight() + 40);
-		if (textLocation != null)
-		{
+		if (textLocation != null) {
 			renderParagraphLocation(graphics, textLocation, text, color);
 		}
 	}
 
-	public static void renderTileOverlayParagraph(Graphics2D graphics, TileObject tileObject, String text, Color color)
-	{
+	public static void renderTileOverlayParagraph(Graphics2D graphics, TileObject tileObject, String text, Color color) {
 		Polygon poly = tileObject.getCanvasTilePoly();
-		if (poly != null)
-		{
+		if (poly != null) {
 			renderPolygon(graphics, poly, color);
 		}
 
 		Point minimapLocation = tileObject.getMinimapLocation();
-		if (minimapLocation != null)
-		{
+		if (minimapLocation != null) {
 			renderMinimapLocation(graphics, minimapLocation, color);
 		}
 
@@ -334,38 +294,31 @@ public class OverlayUtil
 		int lineLength = Integer.MIN_VALUE;
 		String largestLine = "";
 
-		for (String line : lines)
-		{
-			if (line.length() > lineLength)
-			{
+		for (String line : lines) {
+			if (line.length() > lineLength) {
 				lineLength = line.length();
 				largestLine = line;
 			}
 		}
 
 		Point textLocation = tileObject.getCanvasTextLocation(graphics, largestLine, 0);
-		if (textLocation != null)
-		{
+		if (textLocation != null) {
 			renderParagraphLocation(graphics, textLocation, text, color);
 		}
 	}
 
-	public static void fillTile(Graphics2D graphics, Client client, WorldPoint point, Color color)
-	{
-		if (point.getPlane() != client.getPlane())
-		{
+	public static void fillTile(Graphics2D graphics, Client client, WorldPoint point, Color color) {
+		if (point.getPlane() != client.getPlane()) {
 			return;
 		}
 
 		LocalPoint lp = LocalPoint.fromWorld(client, point);
-		if (lp == null)
-		{
+		if (lp == null) {
 			return;
 		}
 
 		Polygon poly = Perspective.getCanvasTilePoly(client, lp);
-		if (poly == null)
-		{
+		if (poly == null) {
 			return;
 		}
 
